@@ -318,13 +318,7 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
-    animationImportWarnings: "\nClip 'Take 001' has import animation warnings that
-      might lower retargeting quality:\nNote: Activate translation DOF on avatar to
-      improve retargeting quality.\n\t'gameAsset:bn_l_elbow_b01' is inbetween humanoid
-      transforms and has rotation animation that will be discarded.\n\t'gameAsset:bn_r_elbow_b01'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'gameAsset:bn_l_knee_b01'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'gameAsset:bn_r_knee_b01'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n"
+    animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -339,7 +333,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Idle1
       takeName: Take 001
-      firstFrame: 0
+      firstFrame: 1
       lastFrame: 50
       wrapMode: 0
       orientationOffsetY: 0
