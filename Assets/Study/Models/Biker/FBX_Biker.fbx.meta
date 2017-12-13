@@ -279,8 +279,8 @@ ModelImporter:
     3300000: gameAsset:shotgun_geo
     4300000: gameAsset:player_geo
     4300002: gameAsset:shotgun_geo
-    7400000: Idle2
-    7400002: Idle1
+    7400000: Pose
+    7400002: Idle
     7400004: RunForward
     7400006: RunBackward
     7400008: RunRight
@@ -331,7 +331,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Idle1
+      name: Idle
       takeName: Take 001
       firstFrame: 1
       lastFrame: 50
@@ -471,7 +471,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Idle2
+      name: Pose
       takeName: Take 001
       firstFrame: 142
       lastFrame: 188
@@ -481,7 +481,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
