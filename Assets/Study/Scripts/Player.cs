@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public bool firstMoveType;
+
     private Animator anim;
+    private int speedID = Animator.StringToHash("Speed"); 
 
 
     private void Awake()
@@ -17,7 +20,14 @@ public class Player : MonoBehaviour
         float ver = Input.GetAxis("Vertical");
         if (ver!=0)
         {
-            anim.SetFloat("Speed", Mathf.Abs(ver));
+            if(firstMoveType)
+            {
+                anim.SetFloat("Speed", Mathf.Abs(ver));
+            }
+            else
+            {
+                anim.SetFloat(speedID, Mathf.Abs(ver));
+            }
         }
     }
 }
