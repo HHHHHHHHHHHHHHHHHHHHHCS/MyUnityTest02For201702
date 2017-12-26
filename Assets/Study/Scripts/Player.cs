@@ -11,12 +11,20 @@ public class Player : MonoBehaviour
     private int isSpeedUpID = Animator.StringToHash("IsSpeedUp");
     private int horizontalID = Animator.StringToHash("Horizontal");
     private int vaultID = Animator.StringToHash("Vault");
+    private int colliderID = Animator.StringToHash("Collider");
 
     private Vector3 matchTarget;
+    private bool isReadyVault;
+    private bool isPlayVault;
+
+    private CharacterController cc;
+
+
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
+        cc = GetComponent<CharacterController>();
     }
 
     private void Update()
@@ -26,13 +34,14 @@ public class Player : MonoBehaviour
 
     public void Move()
     {
-        object _speedID, _isSpeedUpID, _horizontalID, _vaultID;
+        object _speedID, _isSpeedUpID, _horizontalID, _vaultID,_colliderID;
         if (isFirstMoveType)
         {
             _speedID = "Speed";
             _isSpeedUpID = "IsSpeedUp";
             _horizontalID = "Horizontal";
             _vaultID = "Vault";
+            _colliderID = "Collider";
         }
         else
         {
@@ -40,6 +49,7 @@ public class Player : MonoBehaviour
             _isSpeedUpID = isSpeedUpID;
             _horizontalID = horizontalID;
             _vaultID = vaultID;
+            _colliderID = colliderID;
         }
 
 
@@ -54,7 +64,8 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Run"))
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Run")
+                && !isReadyVault)
             {
                 if(GetFloat(_speedID)>3)
                 {
@@ -64,19 +75,17 @@ public class Player : MonoBehaviour
                     {
                         if (hit.collider.CompareTag("Obstacle"))
                         {
-                            if(hit.distance>3)
+                            if(hit.distance>3&&hit.distance<=4.5)
                             {
                                 Vector3 hitPoint = hit.point;
                                 hitPoint.y = hit.collider.transform.position.y
                                     + hit.collider.bounds.size.y+0.1f;
                                 matchTarget = hitPoint;
                                 SetTrigger(_vaultID);
+                                isReadyVault = true;
                             }
-
                         }
-
                     }
-
                 }
 
             }
@@ -87,8 +96,17 @@ public class Player : MonoBehaviour
         //MatchTargetWeightMask 里面的两个 float   第一个是要开始触摸的时间  第二个是 触摸点的时间  两个都是0-1
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("Vault"))
         {
+            if(isReadyVault)
+            {
+                ResteTrigger(_vaultID);
+                isReadyVault = false;
+            }
             anim.MatchTarget(matchTarget, Quaternion.identity, AvatarTarget.LeftHand, new MatchTargetWeightMask(Vector3.one, 0), 0.32f, 0.4f);
         }
+
+
+        cc.enabled = GetFloat(_colliderID) < 0.5f;
+
     }
 
 
@@ -139,6 +157,18 @@ public class Player : MonoBehaviour
         else if (obj is string)
         {
             anim.SetTrigger((string)obj);
+        }
+    }
+
+    public void ResteTrigger(object obj)
+    {
+        if (obj is int)
+        {
+            anim.ResetTrigger((int)obj);
+        }
+        else if (obj is string)
+        {
+            anim.ResetTrigger((string)obj);
         }
     }
 }
