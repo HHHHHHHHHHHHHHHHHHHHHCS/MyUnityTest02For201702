@@ -19,7 +19,8 @@ public class Player : MonoBehaviour
     private bool isReadySlide;
 
     private CharacterController cc;
-
+    [SerializeField]
+    private GameObject wood;
 
 
     private void Awake()
@@ -107,7 +108,8 @@ public class Player : MonoBehaviour
             }
         }
 
-        //MatchTargetWeightMask 里面的两个 float   第一个是要开始触摸的时间  第二个是 触摸点的时间  两个都是0-1
+        //MatchTargetWeightMask 里面的 vector3 是权重 1 是代表完全修改    0代表 不修改
+        //里面的两个 float   第一个是要开始触摸的时间  第二个是 触摸点的时间  两个都是0-1
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("Vault"))
         {
             if (isReadyVault)
@@ -136,6 +138,9 @@ public class Player : MonoBehaviour
                         {
                             if (hit.distance > 4)
                             {
+                                Vector3 point = hit.point;
+                                point.y = 0;
+                                matchTarget= point + transform.forward * 2;
                                 SetTrigger(_slideID);
                                 isReadySlide = true;
                             }
@@ -152,6 +157,7 @@ public class Player : MonoBehaviour
                 ResteTrigger(_slideID);
                 isReadySlide = false;
             }
+            anim.MatchTarget(matchTarget, Quaternion.identity, AvatarTarget.Root, new MatchTargetWeightMask(new Vector3(1,0,1), 0), 0.17f, 0.67f);
         }
     }
 
@@ -215,5 +221,11 @@ public class Player : MonoBehaviour
         {
             anim.ResetTrigger((string)obj);
         }
+    }
+
+
+    public void CarryWood()
+    {
+        wood.SetActive(true);
     }
 }
