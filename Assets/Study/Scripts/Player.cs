@@ -13,6 +13,9 @@ public class Player : MonoBehaviour
     private int vaultID = Animator.StringToHash("Vault");
     private int colliderID = Animator.StringToHash("Collider");
     private int slideID = Animator.StringToHash("Slide");
+    private int isCarryWoodID = Animator.StringToHash("IsCarryWood");
+    private object _speedID, _isSpeedUpID, _horizontalID
+    , _vaultID, _colliderID, _slideID, _isCarryWoodID;
 
     private Vector3 matchTarget;
     private bool isReadyVault;
@@ -21,12 +24,17 @@ public class Player : MonoBehaviour
     private CharacterController cc;
     [SerializeField]
     private GameObject wood;
+    private Transform woodLeft;
+    private Transform woodRight;
 
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
         cc = GetComponent<CharacterController>();
+        woodLeft = wood.transform.Find("LeftHand");
+        woodRight = wood.transform.Find("RightHand");
+        Init();
     }
 
     private void Update()
@@ -34,10 +42,8 @@ public class Player : MonoBehaviour
         Move();
     }
 
-    public void Move()
+    public void Init()
     {
-        object _speedID, _isSpeedUpID, _horizontalID
-            , _vaultID, _colliderID, _slideID ;
         if (isFirstMoveType)
         {
             _speedID = "Speed";
@@ -46,6 +52,7 @@ public class Player : MonoBehaviour
             _vaultID = "Vault";
             _colliderID = "Collider";
             _slideID = "Slide";
+            _isCarryWoodID = "IsCarryWood";
         }
         else
         {
@@ -55,9 +62,12 @@ public class Player : MonoBehaviour
             _vaultID = vaultID;
             _colliderID = colliderID;
             _slideID = slideID;
+            _isCarryWoodID = isCarryWoodID;
         }
+    }
 
-
+    public void Move()
+    {
         float ver = Input.GetAxis("Vertical") * 5;
         SetFloat(_speedID, ver);
 
@@ -68,8 +78,8 @@ public class Player : MonoBehaviour
         SetFloat(_horizontalID, hor);
 
 
-        PlayVault(_speedID,_vaultID);
-        PlaySlide(_speedID,_slideID);
+        PlayVault();
+        PlaySlide();
 
 
 
@@ -78,7 +88,7 @@ public class Player : MonoBehaviour
 
     }
 
-    private void PlayVault(object _speedID,object _vaultID)
+    private void PlayVault()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -121,7 +131,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void PlaySlide(object _speedID, object _slideID)
+    private void PlaySlide()
     {
         if (Input.GetKeyDown(KeyCode.C))
         {
@@ -158,6 +168,26 @@ public class Player : MonoBehaviour
                 isReadySlide = false;
             }
             anim.MatchTarget(matchTarget, Quaternion.identity, AvatarTarget.Root, new MatchTargetWeightMask(new Vector3(1,0,1), 0), 0.17f, 0.67f);
+        }
+    }
+
+    public void CarryWood()
+    {
+
+        wood.SetActive(true);
+        SetBool(_isCarryWoodID, true);
+    }
+
+    private void OnAnimatorIK(int layerIndex)
+    {
+        //layerIndex 是指第几层动画（那一层的动画必须勾选IKPASS）
+        if(layerIndex==1)
+        {
+            int weight = GetBool(_isCarryWoodID) ? 1 : 0;
+            anim.SetIKPosition(AvatarIKGoal.LeftHand, woodLeft.position);
+            anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, weight);
+            anim.SetIKPosition(AvatarIKGoal.RightHand, woodRight.position);
+            anim.SetIKPositionWeight(AvatarIKGoal.RightHand, weight);
         }
     }
 
@@ -199,6 +229,19 @@ public class Player : MonoBehaviour
         }
     }
 
+    public bool GetBool(object obj)
+    {
+        if (obj is int)
+        {
+            return anim.GetBool((int)obj);
+        }
+        else if (obj is string)
+        {
+            return anim.GetBool((string)obj);
+        }
+        return false;
+    }
+
     public void SetTrigger(object obj)
     {
         if (obj is int)
@@ -224,8 +267,5 @@ public class Player : MonoBehaviour
     }
 
 
-    public void CarryWood()
-    {
-        wood.SetActive(true);
-    }
+
 }

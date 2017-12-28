@@ -8,7 +8,9 @@ public class AutoMove : MonoBehaviour
     {
         lerp,
         slerp,
-        smoothDamp
+        smoothDamp,
+        repeat,
+        pingpong
     }
     public MoveType moveType;
     public float targetPosX = 10f;
@@ -38,6 +40,12 @@ public class AutoMove : MonoBehaviour
                 break;
             case MoveType.smoothDamp:
                 MoveSmoothDamp();
+                break;
+            case MoveType.repeat:
+                MoveRepeat();
+                break;
+            case MoveType.pingpong:
+                MovePingpong();
                 break;
             default:
                 break;
@@ -94,4 +102,18 @@ public class AutoMove : MonoBehaviour
         transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref current, 0.3f);
     }
 
+
+    void MoveRepeat()
+    {
+        Vector3 pos = targetPos;
+        pos.x = Mathf.Repeat(Time.time, targetPos.x);
+        transform.position = pos;
+    }
+
+    void MovePingpong()
+    {
+        Vector3 pos = targetPos;
+        pos.x = Mathf.PingPong(Time.time, targetPos.x);
+        transform.position = pos;
+    }
 }
