@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class Player : MonoBehaviour
 {
@@ -26,6 +27,9 @@ public class Player : MonoBehaviour
     private GameObject wood;
     private Transform woodLeft;
     private Transform woodRight;
+
+    [SerializeField]
+    private PlayableDirector pd;
 
 
     private void Awake()
@@ -111,6 +115,7 @@ public class Player : MonoBehaviour
                                 matchTarget = hitPoint;
                                 SetTrigger(_vaultID);
                                 isReadyVault = true;
+                                pd.Play();
                             }
                         }
                     }
